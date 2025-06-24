@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 
 #CARREGANDO DADOS DO NIVEL PRATA
-dadosCompraPrata = pd.read_parquet("compras\\dadosComprasPrata.parquet")
+dadosCompraPrata = pd.read_parquet("C:\\Users\\Caio de Souza\\FACULDADE\\DBA II\\TRABALHO_DL\\aplicacao_datalake\\DATALAKE\\prata\\compras\\dadosComprasPrata.parquet")
 
 #REALIZANDO TRATAMENTO PARA FACILITAR ANALISES FUTURAS
 
@@ -15,4 +15,16 @@ dadosCompraPrata['ano'] = dadosCompraPrata['dt_compra'].dt.year
 #coluna com somente o mes
 dadosCompraPrata['mes'] = dadosCompraPrata['dt_compra'].dt.month
 
-print(dadosCompraPrata)
+#adicionando valor de desconto
+dadosCompraPrata['vl_desconto'] = dadosCompraPrata['vl_vendido'] * dadosCompraPrata['perc_promocao']
+dadosCompraPrata['vl_desconto'] = dadosCompraPrata['vl_desconto'].round(2)
+
+#criando dataframe com dados melhores das vendas
+dadosCompraAnalist = dadosCompraPrata.groupby(['ano', 'mes', 'cd_produto']).agg({
+    'qtde_vendida' : 'sum',
+    'vl_vendido' : 'sum',
+    'vl_desconto' : 'sum'
+}).reset_index()
+
+#colocando os dados obtidos no banco de dados, nivel ouro, em uma tabela especifica
+

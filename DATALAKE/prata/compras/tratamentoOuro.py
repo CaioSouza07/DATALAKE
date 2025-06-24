@@ -26,5 +26,20 @@ dadosCompraAnalist = dadosCompraPrata.groupby(['ano', 'mes', 'cd_produto']).agg(
     'vl_desconto' : 'sum'
 }).reset_index()
 
+print(dadosCompraAnalist)
+
 #colocando os dados obtidos no banco de dados, nivel ouro, em uma tabela especifica
+conn = sqlite3.connect('C:\\Users\\Caio de Souza\\FACULDADE\\DBA II\\TRABALHO_DL\\aplicacao_datalake\\DATALAKE\\ouro\\database\\datalake.db')
+cursor = conn.cursor()
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS compras (
+        ano INTEGER,
+        mes INTEGER,
+        cd_produto INTEGER,
+        qtde_vendida INTEGER,
+        vl_vendido REAL,
+        vl_desconto REAL
+    )
+''')
 

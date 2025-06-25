@@ -43,3 +43,5 @@ cursor.execute('''
     )
 ''')
 
+dadosCompraAnalist.to_sql('compras', conn, if_exists='replace', index = False)
+
